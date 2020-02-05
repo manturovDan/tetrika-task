@@ -1,7 +1,8 @@
 import sys
 
 def get_sort_lst_from_file(filename):
-    lst = open(filename, "r").readline().replace("\"", "").split(",")
+    with open(filename, "r") as f:
+        lst = f.readline().replace("\"", "").split(",")
     lst.sort()
     return lst
 
