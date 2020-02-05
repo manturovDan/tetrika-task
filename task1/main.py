@@ -1,3 +1,5 @@
+import sys
+
 def get_sort_lst_from_file(filename):
     lst = open(filename, "r").readline().replace("\"", "").split(",")
     lst.sort()
@@ -6,7 +8,12 @@ def get_sort_lst_from_file(filename):
 def get_sum(names_lst):
     esum = 0
     for ina, na in enumerate(names_lst):
-        print(na)
+        ksum = 0
+        for let in na:
+            ksum += ord(let) - 64
+        esum += ksum * (ina + 1)
+        print(na, ksum * (ina + 1), esum)
+    return esum
 
 if __name__ == "__main__":
-    get_sort_lst_from_file("names.txt")
+    print(get_sum(get_sort_lst_from_file(sys.argv[1])))
