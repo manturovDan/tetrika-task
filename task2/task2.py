@@ -30,13 +30,18 @@ def get_top(filename):
                 if ip not in frequent and ips[frequent[cur_min]] < ips[ip]:
                     frequent[cur_min] = ip
 
-    print(ips)
-    print(frequent)
+    #print(ips)
+    #print(frequent)
     min_top = get_min(ips, frequent)
     for i in ips:
         if ips[i] == ips[frequent[min_top]] and i != frequent[min_top]:
             frequent.append(i)
 
+    #print({k: v for k, v in sorted(ips.items(), key=lambda item: item[1], reverse=True)}) #check
+
+    frequent.sort(key=lambda key: ips[key], reverse=True)
+    return frequent
+
 
 if __name__ == "__main__":
-    get_top(sys.argv[1])
+    print(get_top(sys.argv[1]))
