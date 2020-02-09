@@ -1,6 +1,10 @@
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, DateTime
+import sys
+
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, DateTime, event
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
+import FileParse
+
 
 engine = create_engine('postgres+psycopg2://dbu:123@localhost:5432/dbb', echo=True)
 Base = declarative_base()
@@ -38,9 +42,16 @@ class Quality(Base):
     lesson_id = Column(String, ForeignKey('lessons.id'))
 
 
-
+need_init = False
+if not engine.dialect.has_table(engine, 'lessons'):
+    need_init = True
 
 Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 session = Session()
+
+
+if need_init:
+    session.add_all(FileParse.lessons_creator(sys.argv[1]))
+    session.commit()
