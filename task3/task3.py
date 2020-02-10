@@ -1,6 +1,6 @@
 import sys
 
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, DateTime, event
+from sqlalchemy import create_engine, Table, Column, Integer, String, SmallInteger, MetaData, ForeignKey, DateTime, event
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 import FileParse
@@ -18,7 +18,7 @@ class Lessons(Base):
     subject = Column(String)
     scheduled_time = Column(DateTime)
 
-    qualities = relationship("Quality")
+    qualities = relationship('Quality', backref='lessons')
 
 
 class Participants(Base):
@@ -40,6 +40,7 @@ class Quality(Base):
 
     id = Column(Integer, primary_key=True)
     lesson_id = Column(String, ForeignKey('lessons.id'))
+    tech_quality = Column(SmallInteger)
 
 
 need_init = False
@@ -51,7 +52,9 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
+fp = FileParse.FileParser(session)
 
 if need_init:
-    session.add_all(FileParse.lessons_creator(sys.argv[1]))
+    session.add_all(fp.lessons_creator(sys.argv[1]))
+    session.add_all(fp.quality_creator(sys.argv[2]))
     session.commit()
