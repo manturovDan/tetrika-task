@@ -52,11 +52,17 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-fp = FileParse.FileParser(session)
+fp = FileParse.FileParser()
 
 if need_init:
-    session.add_all(fp.lessons_creator(sys.argv[1]))
+    '''session.add_all(fp.lessons_creator(sys.argv[1]))
     session.add_all(fp.quality_creator(sys.argv[2]))
     session.add_all(fp.users_creator(sys.argv[3]))
+    session.add_all(fp.participants_creator(sys.argv[4]))'''
+
+    session.add_all(fp.lessons_create(sys.argv[1]))
+    session.add_all(fp.quality_create(sys.argv[2]))
+    session.add_all(fp.users_create(sys.argv[3]))
+    session.commit()
     session.add_all(fp.participants_create(sys.argv[4]))
     session.commit()
