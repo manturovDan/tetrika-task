@@ -25,14 +25,14 @@ class Participants(Base):
     __tablename__ = 'participants'
 
     part_id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(String, ForeignKey('users.id'))
     event_id = Column(Integer)
 
 
 class Users(Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(String, primary_key=True)
     role = Column(String)
 
 class Quality(Base):
@@ -57,4 +57,6 @@ fp = FileParse.FileParser(session)
 if need_init:
     session.add_all(fp.lessons_creator(sys.argv[1]))
     session.add_all(fp.quality_creator(sys.argv[2]))
+    session.add_all(fp.users_creator(sys.argv[3]))
+    session.add_all(fp.participants_create(sys.argv[4]))
     session.commit()
