@@ -3,7 +3,7 @@ from datetime import datetime
 
 class FileParser:
     lessons_exp = re.compile(r"\s([a-z0-9-]*)\s*\|\s*([0-9]*)\s\|\s*([a-z]*)\s*\|\s([0-9-\s:\.]*)")
-    quality_exp = re.compile(r"\s([a-z0-9-]*)\s*\|\s*([0-9])")
+    quality_exp = re.compile(r"\s([a-z0-9-]*)\s*\|\s*([0-9]?)")
     users_exp = re.compile(r"\s([a-z0-9-]*)\s*\|\s*([a-z]*)")
     participants_exp = re.compile(r"\s*([0-9-]*)\s*\|\s*([a-z0-9-]*)")
 
@@ -32,7 +32,11 @@ class FileParser:
                 elif type_cr == 1: #quality
                     q_re = re.match(self.quality_exp, i)
                     if q_re:
-                        add.append(task3.Quality(lesson_id=q_re.group(1), tech_quality=int(q_re.group(2))))
+                        if q_re.group(2):
+                            tc = int(q_re.group(2))
+                        else:
+                            tc = None
+                        add.append(task3.Quality(lesson_id=q_re.group(1), tech_quality=tc))
 
                 elif type_cr == 2: #users
                     u_re = re.match(self.users_exp, i)
@@ -46,7 +50,7 @@ class FileParser:
                     if p_re:
                         add.append(task3.Participants(user_id=p_re.group(2), event_id=int(p_re.group(1))))
 
-        return list(dict.fromkeys(add))
+        return add
 
     def lessons_create(self, filename):
         return self.regex_creator(filename, 0)
