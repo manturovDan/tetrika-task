@@ -123,3 +123,7 @@ for i_date in stat_ex:
 print(json.dumps(stat))
 print(json.dumps(stat_ex))
 print(json.dumps(resl))
+
+print("\nAnswer:")
+for i in resl:
+    print(i[0] + ' ' + i[1] + ' ' + str(i[2]))
